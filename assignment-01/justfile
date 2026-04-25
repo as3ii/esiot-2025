@@ -1,0 +1,24 @@
+default:
+    @just --list --unsorted | grep -v "default"
+
+fmt:
+    @find ./src -type f -not -name "sketch.yaml" | xargs clang-format -i --style=file
+
+check: fmt
+    -@arduino-cli compile --build-path ./build --only-compilation-database ./src/main \
+        && clang-tidy -p ./build ./src/main/{*.h,*.cpp,main.ino}
+# --extra-arg=-std=gnu++11 --extra-arg=-x --extra-arg=c
+
+build:
+    @arduino-cli compile --build-path ./build --warnings all ./src/main
+
+upload:
+    @arduino-cli upload --build-path ./build --verify ./src/main
+
+serial:
+    @arduino-cli monitor --config 115200 ./src/main
+
+objdump:
+    @arduino-cli compile --build-path ./build-dbg --warnings default ./src/main --optimize-for-debug
+    -@$(find ~/.arduino15/packages/arduino/tools/ -name "avr-objdump") \
+        -d ./build-dbg/main.ino.elf | less

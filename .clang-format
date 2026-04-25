@@ -1,0 +1,8 @@
+BasedOnStyle: Mozilla
+# IndentWidth: 2
+---
+Language: Cpp
+AllowShortFunctionsOnASingleLine: All
+AlwaysBreakAfterDefinitionReturnType: None
+BreakAfterReturnType: Automatic
+BreakBeforeBraces: Attach

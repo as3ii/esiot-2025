@@ -1,0 +1,17 @@
+**/.pio
+**/.pio/
+**/.pioenvs
+**/.piolibdeps
+**/CMakeLists.txt
+**/sdkconfig.*
+**/!sdkconfig.defaults
+
+**/build/
+**/build-dbg/
+
+*.mp4
+*.jpg
+
+# nix and direnv
+**/.pre-commit-config.yaml
+**/.direnv/*

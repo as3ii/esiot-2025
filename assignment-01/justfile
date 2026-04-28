@@ -7,7 +7,6 @@ fmt:
 check: fmt
     -@arduino-cli compile --build-path ./build --only-compilation-database ./src/main \
         && clang-tidy -p ./build ./src/main/{*.h,*.cpp,main.ino}
-# --extra-arg=-std=gnu++11 --extra-arg=-x --extra-arg=c
 
 build:
     @arduino-cli compile --build-path ./build --warnings all ./src/main

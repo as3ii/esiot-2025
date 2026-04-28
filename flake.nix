@@ -26,8 +26,7 @@
 
           devShells.default = pkgs.mkShell {
             packages = with pkgs; [
-              glibc.dev
-              clang-tools # clang-tidy, clang-format
+              llvmPackages.clang-unwrapped # clang-tidy, clang-format
               arduino-cli
               #arduino-ide # broken, see: https://github.com/NixOS/nixpkgs/issues/421018
               just
@@ -39,10 +38,6 @@
               ${ardu} update
               ${ardu} upgrade
               ${ardu} core update-index
-              ${ardu} core install arduino:avr
-              ${ardu} lib install liquidcrystal_i2c
-              ${ardu} lib install enableinterrupt
-              ${ardu} lib install timerone
               echo 1>&2 "Welcome to the development shell!"
             '';
           };

@@ -3,7 +3,7 @@
 See: https://github.com/pslab-unibo/esiot-2025-2026/blob/master/assignments/assignment-01.md
 
 v. 0.9.0-20251007
- 
+
 We want to realize an embedded system implementing a game called *Turn on the
 Sequence! (TOS)*.
 

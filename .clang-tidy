@@ -1,10 +1,12 @@
-HeaderFilterRegex: ".*/esiot-2025/.*"
+# HeaderFilterRegex: ".*/esiot-2025/.*"
+# ExcludeHeaderFilterRegex: ".*/(ServoTimer2.h|arduino_avr/|gnu/).*"
 # ExcludeHeaderFilterRegex: ".*/include/gnu/.*"
 FormatStyle: file
 Checks:
   - clang-diagnostic-*
   - clang-analyzer-*
   - bugprone-*
+  - -bugprone-easily-swappable-parameters
   - cppcoreguidelines-*
   - -cppcoreguidelines-avoid-c-arrays
   - -cppcoreguidelines-avoid-non-const-global-variables
@@ -12,6 +14,7 @@ Checks:
   - -cppcoreguidelines-pro-bounds-array-to-pointer-decay
   - -cppcoreguidelines-pro-bounds-constant-array-index
   - -cppcoreguidelines-pro-type-vararg
+  - -cppcoreguidelines-special-member-functions
   - misc-*
   - -misc-header-include-cycle
   - -misc-use-anonymous-namespace

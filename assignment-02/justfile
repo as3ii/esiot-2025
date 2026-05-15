@@ -1,0 +1,47 @@
+arduino_path := "./drone-hangar"
+java_path := "./drone-remote-unit"
+
+@default:
+    just --list --unsorted | grep -v "default"
+
+[working-directory: "./drone-hangar"]
+@fmt-arduino:
+    find . -type f \( -name "*.h*" -or -name "*.c*" \) | xargs clang-format -i --style=file
+
+fmt: fmt-arduino
+
+[working-directory: "./drone-hangar"]
+@check-arduino: fmt-arduino
+    #pio check
+    find . -not -path "*/.pio/*" \( -name "*.cpp" -or -name "*.h" \) | xargs clang-tidy -p .
+
+check: check-arduino
+
+[working-directory: "./drone-hangar"]
+@build-arduino:
+    rm -rf .pio/build/arduino_uno/*
+    pio run
+
+build: build-arduino
+
+[working-directory: "./drone-hangar"]
+@clean-arduino:
+    rm -rf .pio
+
+[working-directory: "./drone-hangar"]
+@upload:
+    pio run -t upload
+
+[working-directory: "./drone-hangar"]
+@serial:
+    pio device monitor -b 115200 -f direct
+
+[working-directory: "./drone-hangar"]
+@objdump:
+    pio debug
+    $(find ~/.platformio/packages/toolchain-atmelavr/ -name "avr-objdump") \
+        -d ./.pio/build/arduino_uno/firmware.elf | less
+
+[working-directory: "./drone-hangar"]
+@compiledb:
+    pio run -t compiledb

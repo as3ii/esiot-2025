@@ -20,7 +20,8 @@ StateIdle::StateIdle()
   motor.on();
   motor.setPosition(DOOR_CLOSE);
 
-  CommunicationService::getInstance().setCallback(REQ_TAKE_OFF, this);
+  CommunicationService::getInstance().setCallback(RX_COMMAND::REQ_TAKE_OFF,
+                                                  this);
 }
 
 StateName StateIdle::getName() const { return StateName::Idle; }
@@ -29,16 +30,17 @@ bool StateIdle::goNext() { return req_received; }
 
 data StateIdle::callback(const RX_COMMAND command) {
   switch (command) {
-    case REQ_TAKE_OFF:
+    case RX_COMMAND::REQ_TAKE_OFF:
       req_received = true;
-      return data{ .cmd = ACK_TAKE_OFF };
+      return data{ .cmd = TX_COMMAND::ACK_TAKE_OFF };
     default:
-      return data{ .cmd = INVALID };
+      return data{ .cmd = TX_COMMAND::INVALID };
   }
 }
 
 StateIdle::~StateIdle() {
   DEBUG_PRINT("D:Destructing Idle");
   components.getDoorMotor().off();
-  CommunicationService::getInstance().setCallback(REQ_TAKE_OFF, nullptr);
+  CommunicationService::getInstance().setCallback(RX_COMMAND::REQ_TAKE_OFF,
+                                                  nullptr);
 }

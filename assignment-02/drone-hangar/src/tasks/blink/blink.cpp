@@ -6,17 +6,17 @@
 Blink::Blink(const uint32_t period, Light* light)
   : Task(period)
   , light(light)
-  , state(OFF) {}
+  , state(state::OFF) {}
 
 void Blink::tick() {
   switch (state) {
-    case OFF:
+    case state::OFF:
       light->switchOn();
-      state = ON;
+      state = state::ON;
       break;
-    case ON:
+    case state::ON:
       light->switchOff();
-      state = OFF;
+      state = state::OFF;
       break;
   }
 }

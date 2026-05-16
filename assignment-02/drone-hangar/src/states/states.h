@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 // State name
-enum StateName : uint8_t {
+enum class StateName : uint8_t {
   Init,
   Idle,
   Takeoff,

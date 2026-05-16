@@ -38,7 +38,8 @@ StateLanding::StateLanding(Scheduler& scheduler)
     distance_measurement_period, &(components.getDistanceDetector()), this);
   scheduler.addTask(distance_measurement);
 
-  CommunicationService::getInstance().setCallback(GET_DISTANCE, this);
+  CommunicationService::getInstance().setCallback(RX_COMMAND::GET_DISTANCE,
+                                                  this);
 }
 
 StateName StateLanding::getName() const { return StateName::Landing; }
@@ -56,10 +57,10 @@ void StateLanding::updateDistance(const float distance) {
 
 data StateLanding::callback(const RX_COMMAND command) {
   switch (command) {
-    case GET_DISTANCE:
-      return data{ .cmd = DISTANCE, .val = { .f = distance } };
+    case RX_COMMAND::GET_DISTANCE:
+      return data{ .cmd = TX_COMMAND::DISTANCE, .val = { .f = distance } };
     default:
-      return data{ .cmd = INVALID };
+      return data{ .cmd = TX_COMMAND::INVALID };
   }
 }
 
@@ -68,5 +69,6 @@ StateLanding::~StateLanding() {
   components.getDoorMotor().off(); // Shut down motor
   scheduler.removeLastTask();      // Remove distance meter task
   scheduler.removeLastTask();      // Remove blink task
-  CommunicationService::getInstance().setCallback(GET_DISTANCE, nullptr);
+  CommunicationService::getInstance().setCallback(RX_COMMAND::GET_DISTANCE,
+                                                  nullptr);
 }

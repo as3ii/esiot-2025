@@ -45,19 +45,19 @@ StateManager::StateManager(Scheduler& scheduler)
 
 State* StateManager::stateFactory(StateName state) {
   switch (state) {
-    case Init:
+    case StateName::Init:
       return new StateInit();
-    case Idle:
+    case StateName::Idle:
       return new StateIdle();
-    case Takeoff:
+    case StateName::Takeoff:
       return new StateTakeoff(scheduler);
-    case DroneOut:
+    case StateName::DroneOut:
       return new StateDroneOut(scheduler);
-    case Landing:
+    case StateName::Landing:
       return new StateLanding(scheduler);
-    case PreAlarm:
+    case StateName::PreAlarm:
       return new StatePreAlarm(scheduler);
-    case Alarm:
+    case StateName::Alarm:
     default:
       return new StateAlarm(scheduler);
   }
@@ -68,7 +68,7 @@ void StateManager::switchState() {
 
   // Critical temperature - alarm
   // Switch to StateAlarm instantly
-  if (current != Alarm && temperature > TEMP_CRITICAL) {
+  if (current != StateName::Alarm && temperature > TEMP_CRITICAL) {
     if (time_threshold_crit == 0) {
       time_threshold_crit = millis();
     } else {
@@ -76,7 +76,7 @@ void StateManager::switchState() {
         old_state_name = current; // Save old state
         delete (state);
         asm volatile("" ::: "memory"); // Do not reorder instructions
-        state = stateFactory(Alarm);
+        state = stateFactory(StateName::Alarm);
         return;
       }
     }
@@ -85,7 +85,8 @@ void StateManager::switchState() {
   // Warning temperature - pre-alarm
   // Switch to StatePreAlarm only if current is Idle or DroneOut
   // to avoid future landings or takeoffs
-  if ((current == Idle || current == DroneOut) && temperature > TEMP_WARNING) {
+  if ((current == StateName::Idle || current == StateName::DroneOut) &&
+      temperature > TEMP_WARNING) {
     if (time_threshold_warn == 0) {
       time_threshold_warn = millis();
     } else {
@@ -93,7 +94,7 @@ void StateManager::switchState() {
         old_state_name = current; // Save old state
         delete (state);
         asm volatile("" ::: "memory"); // Do not reorder instructions
-        state = stateFactory(PreAlarm);
+        state = stateFactory(StateName::PreAlarm);
         return;
       }
     }
@@ -107,30 +108,30 @@ void StateManager::switchState() {
     asm volatile("" ::: "memory"); // Do not reorder instructions
 
     switch (name) {
-      case Init:
-        state = stateFactory(Idle);
+      case StateName::Init:
+        state = stateFactory(StateName::Idle);
         break;
-      case Idle:
-        state = stateFactory(Takeoff);
+      case StateName::Idle:
+        state = stateFactory(StateName::Takeoff);
         break;
-      case Takeoff:
-        state = stateFactory(DroneOut);
+      case StateName::Takeoff:
+        state = stateFactory(StateName::DroneOut);
         break;
-      case DroneOut:
-        state = stateFactory(Landing);
+      case StateName::DroneOut:
+        state = stateFactory(StateName::Landing);
         break;
-      case Landing:
-        state = stateFactory(Idle);
+      case StateName::Landing:
+        state = stateFactory(StateName::Idle);
         break;
-      case PreAlarm:
+      case StateName::PreAlarm:
         state = stateFactory(old_state_name);
-        time_threshold_warn = 0; // Reset
-        old_state_name = Idle;   // Reset
+        time_threshold_warn = 0;          // Reset
+        old_state_name = StateName::Idle; // Reset
         break;
-      case Alarm:
+      case StateName::Alarm:
         state = stateFactory(old_state_name);
-        time_threshold_crit = 0; // Reset
-        old_state_name = Idle;   // Reset
+        time_threshold_crit = 0;          // Reset
+        old_state_name = StateName::Idle; // Reset
         break;
     }
   }
@@ -145,12 +146,14 @@ void StateManager::setTemperature(const float temperature) {
 
 data StateManager::callback(const RX_COMMAND command) {
   switch (command) {
-    case GET_STATE:
-      return data{ .cmd = STATE, .val = { .state = getCurrentState() } };
-    case GET_TEMPERATURE:
-      return data{ .cmd = TEMPERATURE, .val = { .f = temperature } };
+    case RX_COMMAND::GET_STATE:
+      return data{ .cmd = TX_COMMAND::STATE,
+                   .val = { .state = getCurrentState() } };
+    case RX_COMMAND::GET_TEMPERATURE:
+      return data{ .cmd = TX_COMMAND::TEMPERATURE,
+                   .val = { .f = temperature } };
     default:
-      return data{ .cmd = INVALID };
+      return data{ .cmd = TX_COMMAND::INVALID };
   }
 }
 

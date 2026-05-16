@@ -2,19 +2,19 @@
 
 const char* getStateName(StateName state) {
   switch (state) {
-    case Init:
+    case StateName::Init:
       return "Init";
-    case Idle:
+    case StateName::Idle:
       return "Idle";
-    case Takeoff:
+    case StateName::Takeoff:
       return "Takeoff";
-    case DroneOut:
+    case StateName::DroneOut:
       return "DroneOut";
-    case Landing:
+    case StateName::Landing:
       return "Landing";
-    case PreAlarm:
+    case StateName::PreAlarm:
       return "PreAlarm";
-    case Alarm:
+    case StateName::Alarm:
       return "Alarm";
     default:
       return "UnknownState";

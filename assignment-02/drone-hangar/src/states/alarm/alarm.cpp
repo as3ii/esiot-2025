@@ -35,7 +35,7 @@ StateAlarm::StateAlarm(Scheduler& scheduler)
   scheduler.addTask(button_check);
 }
 
-StateName StateAlarm::getName() const { return Alarm; }
+StateName StateAlarm::getName() const { return StateName::Alarm; }
 
 bool StateAlarm::goNext() { return button_pressed; }
 

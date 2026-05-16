@@ -26,8 +26,9 @@ extern void setup() {
     &CommunicationService::getInstance(state_manager_task_period);
   scheduler->addTask(static_cast<Task*>(communication_service));
 
-  communication_service->setCallback(GET_STATE, &state_manager);
-  communication_service->setCallback(GET_TEMPERATURE, &state_manager);
+  communication_service->setCallback(RX_COMMAND::GET_STATE, &state_manager);
+  communication_service->setCallback(RX_COMMAND::GET_TEMPERATURE,
+                                     &state_manager);
 
   DEBUG_PRINT("D:System initialized");
 }

@@ -8,7 +8,7 @@
 class Blink : public Task {
 private:
   Light* light;
-  enum : bool { ON, OFF } state;
+  enum class state : bool { ON, OFF } state;
 
 public:
   Blink(uint32_t period, Light* light);

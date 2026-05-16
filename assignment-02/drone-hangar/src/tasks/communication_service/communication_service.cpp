@@ -34,7 +34,7 @@ void CommunicationService::tick() {
       } else {
         // Invalid received value or callback function not registered
         DEBUG_PRINT("D:Invalid or unregistered command");
-        composeMessage(data{ .cmd = INVALID });
+        composeMessage(data{ .cmd = TX_COMMAND::INVALID });
       }
     } else {
       // Invalid message
@@ -72,10 +72,10 @@ static const formatter FORMATTERS[TX_COMMANDS_COUNT - 1] = {
 int16_t CommunicationService::composeMessage(const data argument) {
   int16_t len = 0;
 
-  if (argument.cmd == INVALID) {
+  if (argument.cmd == TX_COMMAND::INVALID) {
     len = format_simple(tx_buffer, BUFFER_LEN, argument);
   } else {
-    len = FORMATTERS[bitmap_to_index(argument.cmd)](
+    len = FORMATTERS[bitmap_to_index(static_cast<uint8_t>(argument.cmd))](
       tx_buffer, BUFFER_LEN, argument);
   }
 
@@ -98,7 +98,7 @@ void CommunicationService::setCallback(const RX_COMMAND command,
                command,
                callback == nullptr ? " (null)" : "");
   // Not checking for errors (-1) because `command` should be valid
-  callbacks[bitmap_to_index(command)] = callback;
+  callbacks[bitmap_to_index(static_cast<uint8_t>(command))] = callback;
 }
 
 // Return the index of the first set bit in the input value.

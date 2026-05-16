@@ -18,7 +18,7 @@ StatePreAlarm::StatePreAlarm(Scheduler& scheduler)
   scheduler.addTask(temperature_measurement);
 }
 
-StateName StatePreAlarm::getName() const { return PreAlarm; }
+StateName StatePreAlarm::getName() const { return StateName::PreAlarm; }
 
 bool StatePreAlarm::goNext() { return temperature < TEMP_WARNING; }
 

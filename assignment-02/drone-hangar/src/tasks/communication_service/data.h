@@ -7,7 +7,7 @@
 
 constexpr uint8_t RX_COMMANDS_COUNT = 5;
 
-enum RX_COMMAND : uint8_t {
+enum class RX_COMMAND : uint8_t {
   GET_STATE = 1,       // Get system state
   REQ_TAKE_OFF = 2,    // Request take off
   REQ_LANDING = 4,     // Request landing
@@ -18,7 +18,7 @@ enum RX_COMMAND : uint8_t {
 constexpr uint8_t TX_COMMANDS_COUNT = 6;
 
 // Send commands bit set
-enum TX_COMMAND : uint8_t {
+enum class TX_COMMAND : uint8_t {
   INVALID = 0,      // No other parameters
   STATE = 1,        // Followed by the current state
   ACK_TAKE_OFF = 2, // No other parameters

@@ -27,7 +27,8 @@ StateDroneOut::StateDroneOut(Scheduler& scheduler)
     movement_detector_period, &(components.getMovementDetector()), this);
   scheduler.addTask(drone_detector_task);
 
-  CommunicationService::getInstance().setCallback(REQ_LANDING, this);
+  CommunicationService::getInstance().setCallback(RX_COMMAND::REQ_LANDING,
+                                                  this);
 }
 
 StateName StateDroneOut::getName() const { return StateName::DroneOut; }
@@ -38,16 +39,17 @@ bool StateDroneOut::goNext() { return drone_detected && req_received; }
 
 data StateDroneOut::callback(const RX_COMMAND command) {
   switch (command) {
-    case REQ_LANDING:
+    case RX_COMMAND::REQ_LANDING:
       req_received = true;
-      return data{ .cmd = ACK_LANDING };
+      return data{ .cmd = TX_COMMAND::ACK_LANDING };
     default:
-      return data{ .cmd = INVALID };
+      return data{ .cmd = TX_COMMAND::INVALID };
   }
 }
 
 StateDroneOut::~StateDroneOut() {
   DEBUG_PRINT("D:Destructing DroneOut");
   scheduler.removeLastTask(); // Remove movement detection
-  CommunicationService::getInstance().setCallback(REQ_LANDING, nullptr);
+  CommunicationService::getInstance().setCallback(RX_COMMAND::REQ_LANDING,
+                                                  nullptr);
 }

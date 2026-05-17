@@ -100,9 +100,9 @@ int16_t CommunicationService::composeMessage(const data argument) {
 
 void CommunicationService::setCallback(const RX_COMMAND command,
                                        CommandCallback* callback) {
-  DEBUG_PRINTF("D:Registering callback %u%s",
-               static_cast<uint8_t>(command),
-               callback == nullptr ? " (null)" : "");
+  DEBUG_PRINTF(callback != nullptr ? "D:Registering callback %u"
+                                   : "D:De-registering callback %u",
+               static_cast<uint8_t>(command));
   // Not checking for errors (-1) because `command` should be valid
   callbacks[bitmap_to_index(static_cast<uint8_t>(command))] = callback;
 }

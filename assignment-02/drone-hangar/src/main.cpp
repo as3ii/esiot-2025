@@ -10,13 +10,14 @@
 constexpr uint16_t period_ms = 100;
 
 static Scheduler* scheduler;
+static StateManager* state_manager;
 
 extern void setup() {
   DEBUG_PRINT("D:----------------");
   DEBUG_PRINT("D:Starting tasks setup");
 
   scheduler = new Scheduler(period_ms);
-  StateManager state_manager(*scheduler);
+  state_manager = new StateManager(*scheduler);
 
   auto* state_manager_task =
     new StateManagerTask(state_manager_task_period, state_manager);
@@ -26,9 +27,9 @@ extern void setup() {
     &CommunicationService::getInstance(state_manager_task_period);
   scheduler->addTask(static_cast<Task*>(communication_service));
 
-  communication_service->setCallback(RX_COMMAND::GET_STATE, &state_manager);
+  communication_service->setCallback(RX_COMMAND::GET_STATE, state_manager);
   communication_service->setCallback(RX_COMMAND::GET_TEMPERATURE,
-                                     &state_manager);
+                                     state_manager);
 
   DEBUG_PRINT("D:System initialized");
 }

@@ -7,10 +7,10 @@
 
 class StateManagerTask : public Task {
 private:
-  StateManager& state_manager;
+  StateManager* state_manager;
 
 public:
-  StateManagerTask(uint32_t period, StateManager& state_manager);
+  StateManagerTask(uint32_t period, StateManager* state_manager);
   void tick() final;
 
   StateManagerTask(StateManagerTask const&) = delete; // Unwanted method

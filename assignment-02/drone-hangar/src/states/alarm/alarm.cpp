@@ -53,6 +53,7 @@ void StateAlarm::buttonPressed() {
 StateAlarm::~StateAlarm() {
   F_DEBUG_PRINT("D:Destructing Alarm");
   Components::getInstance().getDoorMotor().off();
+  Components::getInstance().getLedAlarm().switchOff();
   scheduler.removeLastTask(); // Remove reset button task
   scheduler.removeLastTask(); // Remove temperature task
 }

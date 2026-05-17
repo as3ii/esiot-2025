@@ -1,37 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-// NOLINTNEXTLINE
 #include <pins_arduino.h>
 #include <stdint.h>
-
-#ifndef DEBUG
-#define DEBUG 1
-#endif
-
-#if DEBUG == 1
-#include "../lib/message_service/message_service.h"
-#include <stdarg.h>
-#include <stdio.h>
-// Buffer length used for formatting
-static constexpr uint8_t FMT_BUFF_LEN = 64;
-// Debug print without formatting.
-inline void DEBUG_PRINT(const char* str) {
-  MessageService::getInstance().sendMessageBlock(str);
-}
-// Debug print with formatting. Max 127 chars + null terminator allowed
-inline void DEBUG_PRINTF(const char* str, ...) {
-  char buff[FMT_BUFF_LEN];
-  va_list args{};
-  va_start(args, str);
-  vsnprintf(buff, FMT_BUFF_LEN, str, args);
-  MessageService::getInstance().sendMessageBlock(buff);
-  va_end(args);
-}
-#else
-inline void DEBUG_PRINT(...) {}
-inline void DEBUG_PRINTF(...) {}
-#endif
 
 constexpr uint32_t UART_SPEED = 115200;
 

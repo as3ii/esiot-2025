@@ -2,6 +2,7 @@
 #include "command_callback.h"
 #include "config.h"
 #include "data.h"
+#include "debug.h"
 #include <message_service.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -33,7 +34,7 @@ void CommunicationService::tick() {
         composeMessage(callbacks[i_cmd]->callback((RX_COMMAND)rx_buffer[2]));
       } else {
         // Invalid received value or callback function not registered
-        DEBUG_PRINT("D:Invalid or unregistered command");
+        F_DEBUG_PRINT("D:Invalid or unregistered command");
         composeMessage(data{ .cmd = TX_COMMAND::INVALID });
       }
     } else {
@@ -49,13 +50,18 @@ void CommunicationService::tick() {
 using formatter = int (*)(char* buf, size_t len, const data& arg);
 
 static int format_state(char* buf, size_t len, const data& arg) {
-  return snprintf(buf, len, "R:%c|%c", arg.cmd, arg.val.state);
+  return snprintf(buf,
+                  len,
+                  "R:%c|%c",
+                  static_cast<uint8_t>(arg.cmd),
+                  static_cast<uint8_t>(arg.val.state));
 }
 static int format_simple(char* buf, size_t len, const data& arg) {
-  return snprintf(buf, len, "R:%c", arg.cmd);
+  return snprintf(buf, len, "R:%c", static_cast<uint8_t>(arg.cmd));
 }
 static int format_float(char* buf, size_t len, const data& arg) {
-  return snprintf(buf, len, "R:%c|%.02f", arg.cmd, arg.val.f);
+  return snprintf(
+    buf, len, "R:%c|%.02f", static_cast<uint8_t>(arg.cmd), arg.val.f);
 }
 
 // Formatter dispatch table.
@@ -80,11 +86,11 @@ int16_t CommunicationService::composeMessage(const data argument) {
   }
 
   if (len < 0) { // Error composing the message, do not send anything
-    DEBUG_PRINT("D:Error composing message");
+    F_DEBUG_PRINT("D:Error composing message");
     return -1;
   }
   if (len > BUFFER_LEN) { // Output truncated, ensure null termination
-    DEBUG_PRINT("D:Message truncated");
+    F_DEBUG_PRINT("D:Message truncated");
     tx_buffer[BUFFER_LEN - 1] = '\0';
     len = BUFFER_LEN;
   }
@@ -95,7 +101,7 @@ int16_t CommunicationService::composeMessage(const data argument) {
 void CommunicationService::setCallback(const RX_COMMAND command,
                                        CommandCallback* callback) {
   DEBUG_PRINTF("D:Registering callback %u%s",
-               command,
+               static_cast<uint8_t>(command),
                callback == nullptr ? " (null)" : "");
   // Not checking for errors (-1) because `command` should be valid
   callbacks[bitmap_to_index(static_cast<uint8_t>(command))] = callback;

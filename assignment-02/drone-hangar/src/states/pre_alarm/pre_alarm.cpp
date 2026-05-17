@@ -1,6 +1,7 @@
 #include "pre_alarm.h"
 #include "components.h"
 #include "config.h"
+#include "debug.h"
 #include "scheduler.h"
 #include "states/states.h"
 #include "task.h"
@@ -8,7 +9,7 @@
 
 StatePreAlarm::StatePreAlarm(Scheduler& scheduler)
   : scheduler(scheduler) {
-  DEBUG_PRINT("D:Entered state PreAlarm");
+  F_DEBUG_PRINT("D:Entered state PreAlarm");
 
   // Check temperature 3x more frequently then state_manager
   Task* temperature_measurement =
@@ -27,6 +28,6 @@ void StatePreAlarm::setTemperature(const float temperature) {
 }
 
 StatePreAlarm::~StatePreAlarm() {
-  DEBUG_PRINT("D:Destructing PreAlarm");
+  F_DEBUG_PRINT("D:Destructing PreAlarm");
   scheduler.removeLastTask(); // Remove temperature task
 }

@@ -1,6 +1,7 @@
 #include "drone_out.h"
 #include "components.h"
 #include "config.h"
+#include "debug.h"
 #include "states/states.h"
 #include "task.h"
 #include "tasks/communication_service/communication_service.h"
@@ -12,7 +13,7 @@
 StateDroneOut::StateDroneOut(Scheduler& scheduler)
   : scheduler(scheduler)
   , components(Components::getInstance()) {
-  DEBUG_PRINT("D:Entered state DroneOut");
+  F_DEBUG_PRINT("D:Entered state DroneOut");
 
   LcdScreen& lcd = components.getLcdScreen();
   lcd.clear();
@@ -48,7 +49,7 @@ data StateDroneOut::callback(const RX_COMMAND command) {
 }
 
 StateDroneOut::~StateDroneOut() {
-  DEBUG_PRINT("D:Destructing DroneOut");
+  F_DEBUG_PRINT("D:Destructing DroneOut");
   scheduler.removeLastTask(); // Remove movement detection
   CommunicationService::getInstance().setCallback(RX_COMMAND::REQ_LANDING,
                                                   nullptr);

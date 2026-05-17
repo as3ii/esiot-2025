@@ -1,6 +1,7 @@
 #include "idle.h"
 #include "components.h"
 #include "config.h"
+#include "debug.h"
 #include "servomotor.h"
 #include "states/states.h"
 #include "tasks/communication_service/communication_service.h"
@@ -9,7 +10,7 @@
 
 StateIdle::StateIdle()
   : components(Components::getInstance()) {
-  DEBUG_PRINT("D:Entered state Idle");
+  F_DEBUG_PRINT("D:Entered state Idle");
 
   LcdScreen& lcd = components.getLcdScreen();
   lcd.clear();
@@ -39,7 +40,7 @@ data StateIdle::callback(const RX_COMMAND command) {
 }
 
 StateIdle::~StateIdle() {
-  DEBUG_PRINT("D:Destructing Idle");
+  F_DEBUG_PRINT("D:Destructing Idle");
   components.getDoorMotor().off();
   CommunicationService::getInstance().setCallback(RX_COMMAND::REQ_TAKE_OFF,
                                                   nullptr);

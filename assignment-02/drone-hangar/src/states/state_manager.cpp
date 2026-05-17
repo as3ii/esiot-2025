@@ -2,6 +2,7 @@
 #include "alarm/alarm.h"
 #include "components.h"
 #include "config.h"
+#include "debug.h"
 #include "drone_out/drone_out.h"
 #include "idle/idle.h"
 #include "init/init.h"

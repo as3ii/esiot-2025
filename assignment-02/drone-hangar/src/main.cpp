@@ -1,4 +1,5 @@
 #include "config.h"
+#include "debug.h"
 #include "states/state_manager.h"
 #include "tasks/communication_service/communication_service.h"
 #include "tasks/communication_service/data.h"
@@ -13,8 +14,8 @@ static Scheduler* scheduler;
 static StateManager* state_manager;
 
 extern void setup() {
-  DEBUG_PRINT("D:----------------");
-  DEBUG_PRINT("D:Starting tasks setup");
+  F_DEBUG_PRINT("D:----------------");
+  F_DEBUG_PRINT("D:Starting tasks setup");
 
   scheduler = new Scheduler(period_ms);
   state_manager = new StateManager(*scheduler);
@@ -31,7 +32,7 @@ extern void setup() {
   communication_service->setCallback(RX_COMMAND::GET_TEMPERATURE,
                                      state_manager);
 
-  DEBUG_PRINT("D:System initialized");
+  F_DEBUG_PRINT("D:System initialized");
 }
 
 extern void loop() {

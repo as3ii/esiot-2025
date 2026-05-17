@@ -1,6 +1,7 @@
 #include "takeoff.h"
 #include "components.h"
 #include "config.h"
+#include "debug.h"
 #include "states/states.h"
 #include "tasks/blink/blink.h"
 #include "tasks/distance_measurement/distance_measurement.h"
@@ -15,7 +16,7 @@ constexpr uint32_t s_to_ms = 1000;
 StateTakeoff::StateTakeoff(Scheduler& scheduler)
   : components(Components::getInstance())
   , scheduler(scheduler) {
-  DEBUG_PRINT("D:Entered state TakeOff");
+  F_DEBUG_PRINT("D:Entered state TakeOff");
 
   LcdScreen& lcd = components.getLcdScreen();
   lcd.clear();
@@ -51,7 +52,7 @@ void StateTakeoff::updateDistance(const float distance) {
 }
 
 StateTakeoff::~StateTakeoff() {
-  DEBUG_PRINT("D:Destructing Takeoff");
+  F_DEBUG_PRINT("D:Destructing Takeoff");
   components.getDoorMotor().off(); // Shut down motor
   scheduler.removeLastTask();      // Remove distance meter task
   scheduler.removeLastTask();      // Remove blink task

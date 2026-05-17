@@ -1,6 +1,7 @@
 #include "alarm.h"
 #include "components.h"
 #include "config.h"
+#include "debug.h"
 #include "scheduler.h"
 #include "states/states.h"
 #include "task.h"
@@ -9,7 +10,7 @@
 
 StateAlarm::StateAlarm(Scheduler& scheduler)
   : scheduler(scheduler) {
-  DEBUG_PRINT("D:Entered state Alarm");
+  F_DEBUG_PRINT("D:Entered state Alarm");
 
   Components& components = Components::getInstance();
 
@@ -44,13 +45,13 @@ void StateAlarm::setTemperature(const float temperature) {
 }
 
 void StateAlarm::buttonPressed() {
-  DEBUG_PRINT("D:Reset button pressed");
+  F_DEBUG_PRINT("D:Reset button pressed");
   // Set to true only if the temperature is ok
   button_pressed = temperature < TEMP_CRITICAL;
 }
 
 StateAlarm::~StateAlarm() {
-  DEBUG_PRINT("D:Destructing Alarm");
+  F_DEBUG_PRINT("D:Destructing Alarm");
   Components::getInstance().getDoorMotor().off();
   scheduler.removeLastTask(); // Remove reset button task
   scheduler.removeLastTask(); // Remove temperature task

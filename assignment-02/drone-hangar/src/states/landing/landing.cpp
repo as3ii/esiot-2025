@@ -1,6 +1,7 @@
 #include "landing.h"
 #include "components.h"
 #include "config.h"
+#include "debug.h"
 #include "states/states.h"
 #include "tasks/blink/blink.h"
 #include "tasks/communication_service/communication_service.h"
@@ -17,7 +18,7 @@ constexpr uint32_t s_to_ms = 1000;
 StateLanding::StateLanding(Scheduler& scheduler)
   : components(Components::getInstance())
   , scheduler(scheduler) {
-  DEBUG_PRINT("D:Entered state Landing");
+  F_DEBUG_PRINT("D:Entered state Landing");
 
   LcdScreen& lcd = components.getLcdScreen();
   lcd.clear();
@@ -65,7 +66,7 @@ data StateLanding::callback(const RX_COMMAND command) {
 }
 
 StateLanding::~StateLanding() {
-  DEBUG_PRINT("D:Destructing Landing");
+  F_DEBUG_PRINT("D:Destructing Landing");
   components.getDoorMotor().off(); // Shut down motor
   scheduler.removeLastTask();      // Remove distance meter task
   scheduler.removeLastTask();      // Remove blink task

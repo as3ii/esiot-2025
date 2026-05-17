@@ -1,10 +1,10 @@
 #include "init.h"
 #include "components.h"
-#include "config.h"
+#include "debug.h"
 #include "states/states.h"
 
 StateInit::StateInit() {
-  DEBUG_PRINT("D:Entered state Init");
+  F_DEBUG_PRINT("D:Entered state Init");
 
   Components& instance = Components::getInstance();
   instance.getLedOn().switchOn();

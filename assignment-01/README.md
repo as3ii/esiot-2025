@@ -61,7 +61,7 @@ difficulty L level which could be a value in the range 1..4 (1 easiest, 4 most
 difficult). The level must affect the value of the factor F (so that the more
 difficult the game is, the greater the factor F must be).
 
-### The assignment
+## The assignment
 
 Develop the game on an MCU-based platform (e.g. Arduino), implementing the embedded
 software using the Wiring framework. Requirements:

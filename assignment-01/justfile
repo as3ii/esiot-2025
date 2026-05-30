@@ -5,8 +5,8 @@ fmt:
     @find ./src -type f -not -name "sketch.yaml" | xargs clang-format -i --style=file
 
 check: fmt
-    -@arduino-cli compile --build-path ./build --only-compilation-database ./src/main \
-        && clang-tidy -p ./build ./src/main/{*.h,*.cpp,main.ino}
+    @arduino-cli compile --build-path ./build --only-compilation-database ./src/main \
+        && clang-tidy -p ./build ./src/main/{*.h,*.cpp,main.ino} 2>/dev/null
 
 build:
     @arduino-cli compile --build-path ./build --warnings all ./src/main

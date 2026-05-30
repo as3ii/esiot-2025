@@ -12,6 +12,10 @@
     Serial.flush();                                                            \
   }
 
+#ifndef UINT8_MAX
+#define UINT8_MAX ((1 << 8) - 1) // 255
+#endif
+
 constexpr uint32_t UART_SPEED = 115200;
 constexpr uint32_t LCD_ADDR = 0x27;
 constexpr uint32_t LCD_COLS = 16;

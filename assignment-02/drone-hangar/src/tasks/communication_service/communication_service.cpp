@@ -6,6 +6,7 @@
 #include <message_service.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <task.h>
 
 CommunicationService::CommunicationService(const uint32_t period)
@@ -60,8 +61,13 @@ static int format_simple(char* buf, size_t len, const data& arg) {
   return snprintf(buf, len, "R:%c", static_cast<uint8_t>(arg.cmd));
 }
 static int format_float(char* buf, size_t len, const data& arg) {
-  return snprintf(
-    buf, len, "R:%c|%.02f", static_cast<uint8_t>(arg.cmd), arg.val.f);
+  constexpr uint8_t buff_length = 7; // [sign] + 2 integer + . + 2 decimal + \0
+  char buff[buff_length];
+  return snprintf(buf,
+                  len,
+                  "R:%c|%s",
+                  static_cast<uint8_t>(arg.cmd),
+                  dtostrf(arg.val.f, 4, 2, buff));
 }
 
 // Formatter dispatch table.

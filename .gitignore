@@ -8,8 +8,11 @@
 **/sdkconfig.*
 **/!sdkconfig.defaults
 
+**/bin/
 **/build/
 **/build-dbg/
+
+**/.gradle/
 
 *.mp4
 *.jpg

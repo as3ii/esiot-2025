@@ -19,13 +19,13 @@ constexpr uint8_t TX_COMMANDS_COUNT = 6;
 
 // Send commands bit set
 enum class TX_COMMAND : uint8_t {
-  INVALID = 0,      // No other parameters
   STATE = 1,        // Followed by the current state
   ACK_TAKE_OFF = 2, // No other parameters
   ACK_LANDING = 4,  // No other parameters
   TEMPERATURE = 8, // Followed by the current temperature, with 2 decimal values
   DISTANCE = 16,   // Followed by the current drone distance in meters with 2
                    // decimal values
+  INVALID = 127,   // No other parameters
 };
 
 using data = struct data {

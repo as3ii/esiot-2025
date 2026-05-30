@@ -18,5 +18,7 @@ float TemperatureSensorLM36::getTemperature() const {
    * Conversion between value in mV and value in °C
    *   value_in_celsius = (value_mv - 500) * mv_to_c
    */
+  // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   return ((analogRead(pin) * (adc_ref_mv / adc_max_val)) - 500.0) * mv_to_c;
+  // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 }

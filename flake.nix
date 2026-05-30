@@ -27,6 +27,10 @@
           lib,
           ...
         }:
+        let
+          jdk = pkgs.jdk21;
+          gradle = pkgs.gradle.override { java = jdk; };
+        in
         {
           formatter = pkgs.nixfmt-tree;
 
@@ -45,18 +49,29 @@
                     "c++"
                   ];
                 };
-                platformio-check = {
+                just-check = {
                   enable = true;
-                  name = "Platformio check";
-                  entry = "${pkgs.writeShellScript "pio-check.sh" ''
-                    pushd "''${1%platformio.ini}" >/dev/null
-                    ${lib.getExe pkgs.platformio-core} check
-                    val="$?"
-                    popd >/dev/null
-                    exit "$val"
+                  name = "Just check";
+                  extraPackages = with pkgs; [
+                    arduino-cli
+                    llvmPackages.clang-unwrapped
+                    gradle
+                    just
+                  ];
+                  entry = "${pkgs.writeShellScript "just-check.sh" ''
+                    res=0
+                    while read -r i; do
+                        printf "\nChecking: ''${i%justfile}\n\n"
+                        pushd "''${i%justfile}" >/dev/null
+                        ${lib.getExe pkgs.just} check || res=1
+                        popd >/dev/null
+                    done << EOF
+                        $(find . -maxdepth 2 -name "justfile")
+                    EOF
+                    exit ''$res
                   ''}";
-                  files = "platformio.ini$";
-                  pass_filenames = true;
+                  pass_filenames = false;
+                  always_run = true;
                 };
                 # Misc
                 check-added-large-files.enable = true;
@@ -74,29 +89,29 @@
           };
 
           devShells.default = pkgs.mkShell {
-            packages = with pkgs; [
-              llvmPackages.clang-unwrapped # clang-tidy, clang-format
-              arduino-cli
-              #arduino-ide # broken, see: https://github.com/NixOS/nixpkgs/issues/421018
-              platformio-core
-              just
-            ];
+            packages =
+              with pkgs;
+              [
+                llvmPackages.clang-unwrapped # clang-tidy, clang-format
+                arduino-cli
+                #arduino-ide # broken, see: https://github.com/NixOS/nixpkgs/issues/421018
+                platformio-core
+                just
+              ]
+              ++ [
+                jdk
+                gradle
+              ];
 
-            shellHook =
-              let
-                ardu = lib.getExe pkgs.arduino-cli;
-              in
-              ''
-                ${config.pre-commit.installationScript}
-                ${ardu} update
-                ${ardu} upgrade
-                ${ardu} core update-index
-                rm -v ~/.platformio/packages/tool-clangtidy/clang-tidy
-                ln -v -s ${lib.getExe' pkgs.llvmPackages.clang-unwrapped "clang-tidy"} ~/.platformio/packages/tool-clangtidy/clang-tidy
-                sed -i "s/\/bin\/bash/\/usr\/bin\/env bash/" ~/.platformio/packages/tool-avrdude/avrdude
-                echo 1>&2 "In platformio projects remember to run 'pio run -t compiledb' to have clangd working correctly"
-                echo 1>&2 "Welcome to the development shell!"
-              '';
+            shellHook = ''
+              ${config.pre-commit.installationScript}
+              export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=lcd'
+              rm -v ~/.platformio/packages/tool-clangtidy/clang-tidy
+              ln -v -s ${lib.getExe' pkgs.llvmPackages.clang-unwrapped "clang-tidy"} ~/.platformio/packages/tool-clangtidy/clang-tidy
+              sed -i "s/\/bin\/bash/\/usr\/bin\/env bash/" ~/.platformio/packages/tool-avrdude/avrdude
+              echo 1>&2 "In platformio projects remember to run 'pio run -t compiledb' to have clangd working correctly"
+              echo 1>&2 "Useful java environment variables: GDK_SCALE=2 _JAVA_AWT_WM_NONREPARENTING=1"
+            '';
           };
         };
 

@@ -1,6 +1,3 @@
-arduino_path := "./drone-hangar"
-java_path := "./drone-remote-unit"
-
 @default:
     just --list --unsorted | grep -v "default"
 
@@ -13,16 +10,25 @@ fmt: fmt-arduino
 [working-directory: "./drone-hangar"]
 @check-arduino: fmt-arduino
     #pio check
-    find . -not -path "*/.pio/*" \( -name "*.cpp" -or -name "*.h" \) | xargs clang-tidy -p .
+    find . -not -path "*/.pio/*" \( -name "*.cpp" -or -name "*.h" \) | \
+    xargs clang-tidy -p . --warnings-as-errors="*" 2>/dev/null
 
-check: check-arduino
+[working-directory: "./drone-remote-unit"]
+@check-gradle:
+    gradle check
+
+check: check-arduino check-gradle
 
 [working-directory: "./drone-hangar"]
 @build-arduino:
     rm -rf .pio/build/arduino_uno/*
     pio run
 
-build: build-arduino
+[working-directory: "./drone-remote-unit"]
+@build-gradle:
+    gradle build && gradle shadowJar
+
+build: build-arduino build-gradle
 
 [working-directory: "./drone-hangar"]
 @clean-arduino:

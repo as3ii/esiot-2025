@@ -1,0 +1,31 @@
+@default:
+    just --list --unsorted | grep -v "default"
+
+@fmt:
+    find . -type f \( -name "*.h*" -or -name "*.c*" \) | xargs clang-format -i --style=file
+
+@check: fmt
+    #pio check
+    find . -not -path "*/.pio/*" \( -name "*.cpp" -or -name "*.h" \) | \
+    xargs clang-tidy -p . --warnings-as-errors="*" 2>/dev/null
+
+@build:
+    rm -rf .pio/build/arduino_uno/*
+    pio run
+
+@clean:
+    rm -rf .pio
+
+@upload:
+    pio run -t upload
+
+@serial:
+    pio device monitor -b 115200 -f direct
+
+@objdump:
+    pio debug
+    $(find ~/.platformio/packages/toolchain-atmelavr/ -name "avr-objdump") \
+        -d ./.pio/build/arduino_uno/firmware.elf | less
+
+@compiledb:
+    pio run -t compiledb

@@ -1,0 +1,11 @@
+@default:
+    just --list --unsorted | grep -v "default"
+
+@check:
+    gradle check
+
+@build:
+    gradle build && gradle shadowJar
+
+@run args=" ":
+    gradle run --args="{{args}}"

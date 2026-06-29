@@ -1,0 +1,14 @@
+@default:
+    just --list --unsorted | grep -v "default"
+
+@fmt:
+    just wcm/fmt
+    just tms/fmt
+
+@check:
+    just wcm/check
+    just tms/check
+
+@build:
+    just wcm/build
+    just tms/build

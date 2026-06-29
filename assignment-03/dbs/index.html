@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DBS</title>
+    <link rel="stylesheet" type="text/css" href="common.css" />
+</head>
+<body>
+    <main>
+        <article>
+            <header>
+                <h2>System Status</h2>
+            </header>
+            <section>
+                <ul>
+                    <li>
+                        <label for="cus-state">CUS State:</label>
+                        <input disabled type="text" id="cus-state" name="cus-state" value="Unknown" />
+                    </li>
+                    <li>
+                        <label for="tms-state">TMS State:</label>
+                        <input disabled type="text" id="tms-state" name="tms-state" value="Unknown" />
+                    </li>
+                    <li>
+                        <label for="wcs-state">WCS State:</label>
+                        <input disabled type="text" id="wcs-state" name="wcs-state" value="Unknown" />
+                    </li>
+                    <li>
+                        <label for="valve-opening">Valve Opening:</label>
+                        <input disabled type="text" id="valve-opening" name="valve-opening" value="Unknown" />
+                    </li>
+                </ul>
+            </section>
+        </article>
+        <article>
+            <header>
+                <h2>System control</h2>
+            </header>
+            <section>
+                <form action="#" method="POST">
+                    <ul>
+                        <li>
+                            <label for="automatic">Automatic</label>
+                            <input checked type="radio" id="automatic" name="mode" value="automatic" />
+                        </li>
+                        <li>
+                            <label for="manual">Manual</label>
+                            <input type="radio" id="manual" name="mode" value="manual" />
+                        </li>
+                        <li>
+                            <label for="valve">Set valve opening</label>
+                            <div>
+                                <input disabled type="range" id="valve" name="valve" min="0" max="100" value="50" />
+                                <span>Value: <output for="valve">50</output></span>
+                            </div>
+                        </li>
+                        <li>
+                            <input type="submit" name="submit" value="Submit" />
+                        </li>
+                    </ul>
+                </form>
+            </section>
+        </article>
+        <article>
+            <header>
+                <h2>Rainwater level</h2>
+            </header>
+            <section>
+                <canvas id="rainwater-level" height="400" width="800"></canvas>
+            </section>
+        </article>
+    </main>
+    <script src="api.js"></script>
+</body>
+</html>

@@ -1,4 +1,5 @@
 **/.cache/
+**/.clangd
 **/compile_commands.json
 **/.pio
 **/.pio/
@@ -11,6 +12,7 @@
 **/bin/
 **/build/
 **/build-dbg/
+**/.settings/
 
 **/.gradle/
 

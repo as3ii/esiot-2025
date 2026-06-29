@@ -1,0 +1,124 @@
+body, header, h1, ul {
+    margin: 0;
+    padding: 0;
+}
+
+article {
+    margin: 10px 5%;
+}
+
+section {
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 5px 0;
+}
+
+ul {
+    list-style: none;
+}
+
+section > ul li {
+    width: 90%;
+    margin-left: 5%;
+    font-size: medium;
+}
+
+section > ul li label {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+section > ul li input {
+    font-weight: bold;
+}
+
+form ul li {
+    margin-bottom: 10px;
+    width: 90%;
+    margin-left: 5%;
+}
+
+form ul li label {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+form ul li input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+form ul li:not(:last-child) input {
+    border: 1px solid black;
+    border-radius: 8px;
+}
+
+form ul li:last-child {
+    margin-bottom: 0px;
+    width: 90%;
+    margin-left: 5%;
+    border-radius: 8px;
+}
+
+form ul li:last-child input {
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+form ul li div span {
+    display: inline-block;
+    vertical-align: center;
+}
+
+section:has(canvas) {
+    overflow-x: scroll;
+    text-align: center;
+}
+
+@media screen and (min-width: 350px) {
+    section > ul li {
+        margin-left: 5%;
+        margin-right: 5%;
+        display: grid;
+        grid-template-columns: 40% 60%;
+    }
+
+    seciton > ul li label {
+        text-align: right;
+        width: 40%;
+        margin-left: auto;
+        padding-right: 5px;
+        align-content: center;
+    }
+
+    form ul li {
+        width: 60%;
+        margin-left: 20%;
+        display: grid;
+        grid-template-columns: 40% 60%;
+    }
+
+    form ul li label {
+        text-align: right;
+        padding-right: 5px;
+        align-content: center;
+    }
+
+    form ul li:not(:last-child) input {
+        box-sizing: content-box;
+        width: 80%;
+    }
+
+    form ul li input[type="radio"] {
+        width: 10%;
+    }
+
+    form ul li:last-child {
+        display: block;
+        width: 50%;
+        margin-left: 25%;
+    }
+}

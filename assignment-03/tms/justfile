@@ -1,0 +1,52 @@
+@default:
+    just --list --unsorted | grep -v "default"
+
+@fmt:
+    find . -type f -not -name ".clangd" \( -name "*.h*" -or -name "*.c*" \) | xargs clang-format -i --style=file
+
+@check: fmt
+    #pio check
+    find . -not -path "*/.pio/*" \( -name "*.cpp" -or -name "*.h" \) | \
+    xargs clang-tidy -p . --warnings-as-errors="*" 2>/dev/null
+
+@build:
+    rm -rf .pio/build/esp32-arduino/*
+    pio run -e esp32-arduino
+
+@build-s3:
+    rm -rf .pio/build/esp32-s3-arduino/*
+    pio run -e esp32-s3-arduino
+
+@clean:
+    rm -rf .pio
+
+@upload:
+    pio run -t upload -e esp32-arduino
+
+@upload-s3:
+    pio run -t upload -e esp32-s3-arduino
+
+@serial:
+    pio device monitor -b 115200 -f direct
+
+@objdump:
+    pio debug -e esp32-arduino
+    $(find ~/.platformio/packages/toolchain-xtensa-esp32/ -name "xtensa-esp32-elf-objdump") \
+        -d ./.pio/build/esp32-arduino/firmware.elf | less
+
+@objdump-s3:
+    pio debug -e esp32-s3-arduino
+    $(find ~/.platformio/packages/toolchain-xtensa-esp32s3/ -name "xtensa-esp32s3-elf-objdump") \
+        -d ./.pio/build/esp32-s3-arduino/firmware.elf | less
+
+@compiledb:
+    pio run -t compiledb -e esp32-arduino
+    just strip-compiledb
+
+@compiledb-s3:
+    pio run -t compiledb -e esp32-s3-arduino
+    just strip-compiledb
+
+@strip-compiledb:
+    sed -i '/"command"/ s/ -mlongcalls\| -fstrict-volatile-bitfields\| -fno-tree-switch-conversion\| -Wno-frame-address\| -freorder-blocks / /g' compile_commands.json
+    sed -i '/"command"/ s| -I/| -isystem/|g' compile_commands.json

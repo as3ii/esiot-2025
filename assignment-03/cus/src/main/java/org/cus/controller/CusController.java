@@ -175,16 +175,16 @@ public final class CusController implements AutoCloseable {
         }
         lastSeq = seq;
 
-        // Check timings and level
+        // Check timings and level (level: low number = high real level)
         final long now = System.currentTimeMillis();
         lastLevelTimestamp = now;
-        if (level >= criticalLevel && aboveCriticalLevelSince < 0) {
-            // aboveWarningLevelSince = -1;
+        if (level <= criticalLevel && aboveCriticalLevelSince < 0) {
+            aboveWarningLevelSince = -1;
             aboveCriticalLevelSince = now;
-        } else if (level < criticalLevel && level >= warningLevel && aboveWarningLevelSince < 0) {
-            aboveWarningLevelSince = now;
+        } else if (level > criticalLevel && level <= warningLevel && aboveWarningLevelSince < 0) {
+            aboveWarningLevelSince = aboveCriticalLevelSince > 0 ? now - warningMs : now;
             aboveCriticalLevelSince = -1;
-        } else if (level < warningLevel) {
+        } else if (level > warningLevel) {
             aboveCriticalLevelSince = -1;
             aboveWarningLevelSince = -1;
         }
